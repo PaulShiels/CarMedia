@@ -1,0 +1,13 @@
+c:\users\paul\documents\visual studio 2013\Projects\CarMedia\CarMedia\bin\Debug\CarMedia.exe.config
+c:\users\paul\documents\visual studio 2013\Projects\CarMedia\CarMedia\bin\Debug\CarMedia.exe
+c:\users\paul\documents\visual studio 2013\Projects\CarMedia\CarMedia\bin\Debug\CarMedia.pdb
+c:\users\paul\documents\visual studio 2013\Projects\CarMedia\CarMedia\obj\Debug\CarMedia.csprojResolveAssemblyReference.cache
+c:\users\paul\documents\visual studio 2013\Projects\CarMedia\CarMedia\obj\Debug\MainWindow.baml
+c:\users\paul\documents\visual studio 2013\Projects\CarMedia\CarMedia\obj\Debug\MainWindow.g.cs
+c:\users\paul\documents\visual studio 2013\Projects\CarMedia\CarMedia\obj\Debug\App.g.cs
+c:\users\paul\documents\visual studio 2013\Projects\CarMedia\CarMedia\obj\Debug\CarMedia_MarkupCompile.cache
+c:\users\paul\documents\visual studio 2013\Projects\CarMedia\CarMedia\obj\Debug\CarMedia.g.resources
+c:\users\paul\documents\visual studio 2013\Projects\CarMedia\CarMedia\obj\Debug\CarMedia.Properties.Resources.resources
+c:\users\paul\documents\visual studio 2013\Projects\CarMedia\CarMedia\obj\Debug\CarMedia.csproj.GenerateResource.Cache
+c:\users\paul\documents\visual studio 2013\Projects\CarMedia\CarMedia\obj\Debug\CarMedia.exe
+c:\users\paul\documents\visual studio 2013\Projects\CarMedia\CarMedia\obj\Debug\CarMedia.pdb

@@ -47,6 +47,8 @@ namespace CarMedia
             songName.Header = "Name";
             album.Header = "Album";
             artist.Header = "Artist";
+            txtsongTimeLeft.Text = String.Format(@"{0:mm\:ss}", TimeSpan.FromSeconds(TimeSpan.Zero.TotalSeconds));
+            txtsongRunningTime.Text = String.Format(@"{0:mm\:ss}", TimeSpan.FromSeconds(TimeSpan.Zero.TotalSeconds));
 
             //Set up buttons
             btnPlay.IsEnabled = false;
@@ -55,7 +57,7 @@ namespace CarMedia
 
             sldrTrack.IsMoveToPointEnabled = true;
 
-            sliderChanging.Interval = TimeSpan.FromMilliseconds(100);
+            sliderChanging.Interval = TimeSpan.FromMilliseconds(10);
             sliderChanging.Tick += new EventHandler(SliderMoving);
             timer.Interval = TimeSpan.FromMilliseconds(1000); //one second
             timer.Tick += new EventHandler(timer_Tick);
@@ -99,7 +101,7 @@ namespace CarMedia
                 if (!sliderBeingDragged)
                 {
                     prbrSong.Value = s.Position.TotalSeconds;
-                    sldrTrack.Value = s.Position.TotalSeconds;
+                    sldrTrack.Value = prbrSong.Value;
                 }                
 
                 try
@@ -146,8 +148,7 @@ namespace CarMedia
             //Quickly reset the progress bar to 0 as soon as the song stops look good.
             prbrSong.Value = 0;
             sldrTrack.Value = 0;
-            prbrSong.Maximum = s.NaturalDuration.TimeSpan.TotalSeconds;
-            sldrTrack.Maximum = s.NaturalDuration.TimeSpan.TotalSeconds;
+            
             songPlaying = (Song)lvSelectionDetails.SelectedValue;
 
             if (songPlaying != null)
@@ -155,7 +156,8 @@ namespace CarMedia
                 s = songs[songPlaying.songId];
                 s.Play();
                 mediaPlayerIsPlaying = true;
-                //prbrSong.Maximum = s.Position.TotalSeconds;
+                prbrSong.Maximum = s.NaturalDuration.TimeSpan.TotalSeconds;
+                sldrTrack.Maximum = prbrSong.Maximum;
 
                 lvSelectionDetails.Visibility = Visibility.Hidden;
                 nowPlaying.Visibility = Visibility.Visible;
@@ -273,8 +275,7 @@ namespace CarMedia
 
         private void sldrTrack_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
         {
-            sliderChanging.Start();
-            sliderBeingDragged = true;
+            sliderChanging.Start();            
         }
         
     }

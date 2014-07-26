@@ -82,7 +82,7 @@
                 </Grid.ColumnDefinitions>
                 <TextBlock x:Name="txtsongRunningTime" Margin="5,0" FontSize="15" Foreground="Yellow"/>
                 <ProgressBar x:Name="prbrSong" Grid.Column="1"></ProgressBar>
-                <Slider x:Name="sldrTrack" Grid.Column="1" Orientation="Horizontal" ValueChanged="sldrTrack_ValueChanged" PreviewMouseUp="sldrTrack_PreviewMouseUp" Opacity="0"></Slider>
+                <Slider x:Name="sldrTrack" Grid.Column="1" Orientation="Horizontal" ValueChanged="sldrTrack_ValueChanged" PreviewMouseUp="sldrTrack_PreviewMouseUp"/>
                 <TextBlock x:Name="txtsongTimeLeft" Grid.Column="2" Margin="5,0,20,0" FontSize="15" Foreground="Yellow"/>
             </Grid>
             <StackPanel Orientation="Horizontal">

@@ -24,11 +24,12 @@ namespace CarMedia
     {
         private List<MediaPlayer> songs = new List<MediaPlayer>();
         private MediaPlayer s = new MediaPlayer();
-        private bool mediaPlayerIsPlaying = false;
-        private bool userIsDraggingSlider = false;
+        private bool mediaPlayerIsPlaying = false, mediaPaused = false, mediaStopped=false;
+        private TimeSpan pausedPosition;
+        private bool sliderBeingDragged = false;
         private List<Song> lstSongs = new List<Song>();
         private MediaElement mePlayer = new MediaElement();
-        private DispatcherTimer timer = new DispatcherTimer();
+        private DispatcherTimer timer = new DispatcherTimer(), sliderChanging = new DispatcherTimer();
         private Song songPlaying;
         //<MediaElement Name="mePlayer" Grid.Row="1" LoadedBehavior="Manual" Stretch="None" />
 
@@ -46,6 +47,16 @@ namespace CarMedia
             songName.Header = "Name";
             album.Header = "Album";
             artist.Header = "Artist";
+
+            //Set up buttons
+            btnPlay.IsEnabled = false;
+            btnStop.IsEnabled = false;
+            btnPlay.Content = "Play";
+
+            sldrTrack.IsMoveToPointEnabled = true;
+
+            sliderChanging.Interval = TimeSpan.FromMilliseconds(100);
+            sliderChanging.Tick += new EventHandler(SliderMoving);
             timer.Interval = TimeSpan.FromMilliseconds(1000); //one second
             timer.Tick += new EventHandler(timer_Tick);
             timer.Start();
@@ -55,7 +66,7 @@ namespace CarMedia
             {
                 s = new MediaPlayer();
                 s.Open(new Uri(song, UriKind.Relative));
-                s.ScrubbingEnabled = true;
+                //s.ScrubbingEnabled = true;
                 songs.Add(s);
                 
                 TagLib.File tagFile = TagLib.File.Create(song);
@@ -77,12 +88,19 @@ namespace CarMedia
 
             lvSelectionDetails.ItemsSource = lstSongs;
         }
+               
 
         private void timer_Tick(object sender, EventArgs e)
         {
             if (mediaPlayerIsPlaying)
             {
-                prbrSong.Value = s.Position.TotalSeconds;
+                btnPlay.Content = "Pause";
+
+                if (!sliderBeingDragged)
+                {
+                    prbrSong.Value = s.Position.TotalSeconds;
+                    sldrTrack.Value = s.Position.TotalSeconds;
+                }                
 
                 try
                 {
@@ -94,29 +112,17 @@ namespace CarMedia
                 {
 
                 }
+
+            }
+            else if (!mediaPaused)
+            {
+                btnStop.IsEnabled = false;
             }
         }
 
         private void lvSelectionDetails_MouseDoubleClick(object sender, MouseButtonEventArgs e)
         {
-            timer.Stop();            
-            s.Stop();
-            prbrSong.Maximum = s.NaturalDuration.TimeSpan.TotalSeconds;
-            songPlaying = (Song)lvSelectionDetails.SelectedValue;
-            if (songPlaying != null)
-            {
-                s = songs[songPlaying.songId];
-                s.Play();
-                mediaPlayerIsPlaying = true;
-                //prbrSong.Maximum = s.Position.TotalSeconds;
-
-                lvSelectionDetails.Visibility = Visibility.Hidden;
-                nowPlaying.Visibility = Visibility.Visible;
-                npSongTitle.Text = songPlaying.songName;
-                npArtistName.Text = songPlaying.artist;
-                npAlbumTitle.Text = songPlaying.album;
-                timer.Start();
-            }
+            PlaySelectedSong();
         }
 
         private void BtnBack_Click(object sender, RoutedEventArgs e)
@@ -130,6 +136,33 @@ namespace CarMedia
             {
                 nowPlaying.Visibility = Visibility.Visible;
                 lvSelectionDetails.Visibility = Visibility.Hidden;
+            }
+        }
+
+        private void PlaySelectedSong()
+        {
+            //timer.Stop();            
+            s.Stop();
+            //Quickly reset the progress bar to 0 as soon as the song stops look good.
+            prbrSong.Value = 0;
+            sldrTrack.Value = 0;
+            prbrSong.Maximum = s.NaturalDuration.TimeSpan.TotalSeconds;
+            sldrTrack.Maximum = s.NaturalDuration.TimeSpan.TotalSeconds;
+            songPlaying = (Song)lvSelectionDetails.SelectedValue;
+
+            if (songPlaying != null)
+            {
+                s = songs[songPlaying.songId];
+                s.Play();
+                mediaPlayerIsPlaying = true;
+                //prbrSong.Maximum = s.Position.TotalSeconds;
+
+                lvSelectionDetails.Visibility = Visibility.Hidden;
+                nowPlaying.Visibility = Visibility.Visible;
+                npSongTitle.Text = songPlaying.songName;
+                npArtistName.Text = songPlaying.artist;
+                npAlbumTitle.Text = songPlaying.album;
+                //timer.Start();
             }
         }
 
@@ -166,6 +199,84 @@ namespace CarMedia
             //mediaPlayerIsPlaying = false;
         }
         #endregion
+
+        private void lvSelectionDetails_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            btnPlay.IsEnabled = true;
+        }
+
+        private void btnPlay_Click(object sender, RoutedEventArgs e)
+        {
+            //Was Pause pressed
+            if (mediaPlayerIsPlaying)
+            {
+                s.Pause();
+                PlayState(false, true, false, s.Position);
+                btnPlay.Content = "Resume";
+                btnStop.IsEnabled = true;
+            }
+
+            //Was Resume pressed
+            else if (mediaPaused)
+            {
+                s.Position = pausedPosition;
+                s.Play();
+                mediaPaused = false;
+                mediaPlayerIsPlaying = true;
+                btnPlay.Content = "Pause";
+            }
+
+            //Just play the song
+            else
+            {
+                PlaySelectedSong();
+                btnStop.IsEnabled = true;
+            }
+        }
+
+        private void btnStop_Click(object sender, RoutedEventArgs e)
+        {
+            PlayState(false, false, true, TimeSpan.Zero);
+            s.Stop();
+            prbrSong.Value = 0;
+            sldrTrack.Value = 0;
+            btnPlay.Content = "Play";
+        }
+
+        private void PlayState(bool playing, bool paused, bool stopped, TimeSpan position)
+        {
+            this.mediaPlayerIsPlaying = playing;
+            this.mediaPaused = paused;
+            this.mediaStopped = stopped;
+
+            if (paused)
+            {
+                this.pausedPosition = position;
+            }
+            else
+            {
+                this.s.Position = position;
+            }
+        }
+
+        private void sldrTrack_PreviewMouseUp(object sender, MouseButtonEventArgs e)
+        {
+            s.Position = TimeSpan.FromSeconds(sldrTrack.Value);
+            sliderChanging.Stop();
+            sliderBeingDragged = false;
+        }
+
+        private void SliderMoving(object sender, EventArgs e)
+        {
+            prbrSong.Value = sldrTrack.Value;
+        }
+
+        private void sldrTrack_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
+        {
+            sliderChanging.Start();
+            sliderBeingDragged = true;
+        }
+        
     }
 
     public class Song

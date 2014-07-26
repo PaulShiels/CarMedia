@@ -118,13 +118,14 @@ namespace CarMedia
             }
             else if (!mediaPaused)
             {
-                btnStop.IsEnabled = false;
+                //btnStop.IsEnabled = false;
             }
         }
 
         private void lvSelectionDetails_MouseDoubleClick(object sender, MouseButtonEventArgs e)
         {
-            PlaySelectedSong();
+            songPlaying = (Song)lvSelectionDetails.SelectedValue;
+            PlaySelectedSong(songPlaying.songId);
         }
 
         private void BtnBack_Click(object sender, RoutedEventArgs e)
@@ -141,31 +142,37 @@ namespace CarMedia
             }
         }
 
-        private void PlaySelectedSong()
+        private void PlaySelectedSong(int songId)
         {
-            //timer.Stop();            
-            s.Stop();
-            //Quickly reset the progress bar to 0 as soon as the song stops look good.
-            prbrSong.Value = 0;
-            sldrTrack.Value = 0;
-            
-            songPlaying = (Song)lvSelectionDetails.SelectedValue;
-
-            if (songPlaying != null)
+            try
             {
-                s = songs[songPlaying.songId];
-                s.Play();
-                mediaPlayerIsPlaying = true;
-                prbrSong.Maximum = s.NaturalDuration.TimeSpan.TotalSeconds;
-                sldrTrack.Maximum = prbrSong.Maximum;
+                s.Stop();
+                //Quickly reset the progress bar to 0 as soon as the song stops look good.
+                prbrSong.Value = 0;
+                sldrTrack.Value = 0;
 
-                lvSelectionDetails.Visibility = Visibility.Hidden;
-                nowPlaying.Visibility = Visibility.Visible;
-                npSongTitle.Text = songPlaying.songName;
-                npArtistName.Text = songPlaying.artist;
-                npAlbumTitle.Text = songPlaying.album;
-                //timer.Start();
+                if (songPlaying != null)
+                {
+                    s = songs[songId];
+                    s.Play();
+                    mediaPlayerIsPlaying = true;
+                    prbrSong.Maximum = s.NaturalDuration.TimeSpan.TotalSeconds;
+                    sldrTrack.Maximum = prbrSong.Maximum;
+
+                    lvSelectionDetails.Visibility = Visibility.Hidden;
+                    nowPlaying.Visibility = Visibility.Visible;
+                    UpdateNowPlayingPage();
+                }
             }
+            catch
+            { }
+        }
+
+        private void UpdateNowPlayingPage()
+        {
+            npSongTitle.Text = songPlaying.songName;
+            npArtistName.Text = songPlaying.artist;
+            npAlbumTitle.Text = songPlaying.album;
         }
 
         #region unused
@@ -231,7 +238,8 @@ namespace CarMedia
             //Just play the song
             else
             {
-                PlaySelectedSong();
+                songPlaying = (Song)lvSelectionDetails.SelectedValue;
+                PlaySelectedSong(songPlaying.songId);
                 btnStop.IsEnabled = true;
             }
         }
@@ -276,6 +284,26 @@ namespace CarMedia
         private void sldrTrack_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
         {
             sliderChanging.Start();            
+        }
+
+        private void btnForward_Click(object sender, RoutedEventArgs e)
+        {
+            if (songPlaying.songId + 1 < songs.Count())
+            {
+                PlaySelectedSong(songPlaying.songId + 1);
+                songPlaying = lstSongs[songPlaying.songId + 1];
+                UpdateNowPlayingPage();
+            }
+        }
+
+        private void btnBack_Click_1(object sender, RoutedEventArgs e)
+        {
+            if (songPlaying.songId - 1 >= 0)
+            {
+                PlaySelectedSong(songPlaying.songId - 1);
+                songPlaying = lstSongs[songPlaying.songId - 1];
+                UpdateNowPlayingPage();
+            }
         }
         
     }

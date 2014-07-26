@@ -81,15 +81,15 @@
                     <ColumnDefinition Width="Auto"/>
                 </Grid.ColumnDefinitions>
                 <TextBlock x:Name="txtsongRunningTime" Margin="5,0" FontSize="15" Foreground="Yellow"/>
-                <ProgressBar x:Name="prbrSong" Grid.Column="1"></ProgressBar>
-                <Slider x:Name="sldrTrack" Grid.Column="1" Orientation="Horizontal" ValueChanged="sldrTrack_ValueChanged" PreviewMouseUp="sldrTrack_PreviewMouseUp"/>
+                <ProgressBar x:Name="prbrSong" Grid.Column="1"/>
+                <Slider x:Name="sldrTrack" Grid.Column="1" Orientation="Horizontal" ValueChanged="sldrTrack_ValueChanged" PreviewMouseUp="sldrTrack_PreviewMouseUp" Opacity="0"/>
                 <TextBlock x:Name="txtsongTimeLeft" Grid.Column="2" Margin="5,0,20,0" FontSize="15" Foreground="Yellow"/>
             </Grid>
             <StackPanel Orientation="Horizontal">
                 <Button x:Name="btnPlay" Margin="5,10,0,0" Height="40" Width="50" Click="btnPlay_Click"></Button>
                 <Button x:Name="btnStop" Margin="5,10,0,0" Height="40" Width="50" Click="btnStop_Click">Stop</Button>
-                <Button x:Name="btnForward" Margin="5,10,0,0" Height="40" Width="50">Next</Button>
-                <Button x:Name="btnBack" Margin="5,10,0,0" Height="40" Width="50">Previous</Button>
+                <Button x:Name="btnBack" Margin="5,10,0,0" Height="40" Width="50" Click="btnBack_Click_1">Previous</Button>
+                <Button x:Name="btnForward" Margin="5,10,0,0" Height="40" Width="50" Click="btnForward_Click">Next</Button>
                 <Button x:Name="btnEqualizer" Margin="5,10,0,0" Height="40" Width="50">Equalizer</Button>
                 <Button x:Name="btnEject" Margin="5,10,0,0" Height="40" Width="50">Eject</Button>
                 <Button x:Name="btnRip" Margin="5,10,0,0" Height="40" Width="50">Rip</Button>

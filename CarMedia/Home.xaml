@@ -44,7 +44,7 @@
         
         <Clock:AnalogClock Grid.RowSpan="4" Grid.ColumnSpan="5" HorizontalAlignment="Center" Margin="10,12,0,0" VerticalAlignment="Center"/>
         <Button x:Name="btnRadio" Content="Radio" HorizontalAlignment="Right" Margin="0,50,0,0" Style="{StaticResource buttonStyle}" Click="btnRadio_Click"></Button>
-        <Button x:Name="btnMusic" Content="Music" Grid.Row="1" Style="{StaticResource buttonStyle}"></Button>
+        <Button x:Name="btnMusic" Content="Music" Grid.Row="1" Style="{StaticResource buttonStyle}" Click="btnMusic_Click"></Button>
         <Button x:Name="btnVideo" Content="Video" Grid.Row="2" Style="{StaticResource buttonStyle}"></Button>
         <Button x:Name="btnInternet" Content="Internet" Grid.ColumnSpan="1" HorizontalAlignment="Right" Margin="0,0,0,45" Grid.Row="3" Style="{StaticResource buttonStyle}"></Button>
         <Button x:Name="btnPhone" Content="Phone" Grid.Column="3" Margin="-105,50,0,0" Style="{StaticResource buttonStyle}"></Button>

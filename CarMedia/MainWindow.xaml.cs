@@ -20,9 +20,13 @@ namespace CarMedia
     /// </summary>
     public partial class MainWindow : Window
     {
+        public static Music musicPage = new Music();
+        public static Home homePage = new Home();
+
         public MainWindow()
         {
             InitializeComponent();
+            MediaFrame.Source = new Uri("Home.xaml", UriKind.Relative);
         }
     }
 }

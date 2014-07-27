@@ -14,7 +14,7 @@
         
         <TextBlock Background="Wheat">           
         </TextBlock>
-        <Frame Source="Music.xaml"></Frame>
+        <Frame x:Name="MediaFrame" NavigationUIVisibility="Hidden"></Frame>
         
         <TextBlock Grid.Row="1" Background="Black"></TextBlock>
         <TextBlock Background="Black" Grid.Row="2"></TextBlock>

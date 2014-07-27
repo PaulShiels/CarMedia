@@ -21,8 +21,6 @@ namespace CarMedia
     /// </summary>
     public partial class Home : Page
     {
-        //Create an instance of DispatcherTimer
-        //private DispatcherTimer dT = new DispatcherTimer();
         public Home()
         {
             InitializeComponent();
@@ -31,6 +29,20 @@ namespace CarMedia
         private void btnRadio_Click(object sender, RoutedEventArgs e)
         {
             
+        }
+
+        private void btnMusic_Click(object sender, RoutedEventArgs e)
+        {
+            if (!Music.mediaPlayerIsPlaying && !Music.mediaPaused && !Music.mediaStopped)
+            {
+                NavigationService.Navigate(MainWindow.musicPage);
+            }
+            else
+            {
+                NavigationService.Navigate(MainWindow.musicPage);
+                //musicPage.Visibility = Visibility.Visible;
+                
+            }
         }
           
     }

@@ -24,7 +24,7 @@ namespace CarMedia
     {
         private List<MediaPlayer> songs = new List<MediaPlayer>();
         private MediaPlayer s = new MediaPlayer();
-        private bool mediaPlayerIsPlaying = false, mediaPaused = false, mediaStopped=false;
+        public static bool mediaPlayerIsPlaying = false, mediaPaused = false, mediaStopped=false;
         private TimeSpan pausedPosition;
         private bool sliderBeingDragged = false;
         private List<Song> lstSongs = new List<Song>();
@@ -44,6 +44,7 @@ namespace CarMedia
 
         private void Page_Loaded(object sender, RoutedEventArgs e)
         {
+            imgHomeIcon.Source = new BitmapImage(new Uri("C:\\Users\\Paul\\Documents\\Visual Studio 2013\\Projects\\CarMedia\\CarMedia\\Images\\Home_Icon.png"));
             songName.Header = "Name";
             album.Header = "Album";
             artist.Header = "Artist";
@@ -54,6 +55,7 @@ namespace CarMedia
             btnPlay.IsEnabled = false;
             btnStop.IsEnabled = false;
             btnPlay.Content = "Play";
+            BtnBack.Visibility = Visibility.Hidden;
 
             sldrTrack.IsMoveToPointEnabled = true;
 
@@ -97,6 +99,7 @@ namespace CarMedia
             if (mediaPlayerIsPlaying)
             {
                 btnPlay.Content = "Pause";
+                BtnBack.Visibility = Visibility.Visible;
 
                 if (!sliderBeingDragged)
                 {
@@ -125,7 +128,9 @@ namespace CarMedia
         private void lvSelectionDetails_MouseDoubleClick(object sender, MouseButtonEventArgs e)
         {
             songPlaying = (Song)lvSelectionDetails.SelectedValue;
+            btnStop.IsEnabled = true;
             PlaySelectedSong(songPlaying.songId);
+            
         }
 
         private void BtnBack_Click(object sender, RoutedEventArgs e)
@@ -255,9 +260,9 @@ namespace CarMedia
 
         private void PlayState(bool playing, bool paused, bool stopped, TimeSpan position)
         {
-            this.mediaPlayerIsPlaying = playing;
-            this.mediaPaused = paused;
-            this.mediaStopped = stopped;
+            mediaPlayerIsPlaying = playing;
+            mediaPaused = paused;
+            mediaStopped = stopped;
 
             if (paused)
             {
@@ -305,6 +310,14 @@ namespace CarMedia
                 UpdateNowPlayingPage();
             }
         }
+
+        private void HomeBtn_Click(object sender, RoutedEventArgs e)
+        {
+            NavigationService navService = NavigationService.GetNavigationService(this);
+            navService.Navigate(MainWindow.homePage);
+            //this.Visibility = Visibility.Hidden;
+        }
+
         
     }
 
